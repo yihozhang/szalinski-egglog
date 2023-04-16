@@ -1,0 +1,3 @@
+(relation is-not-zero (Cad))
+(relation is-pos (Cad))
+;; TODO

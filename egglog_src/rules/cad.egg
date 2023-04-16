@@ -1,0 +1,107 @@
+
+;; scale_flip
+(rewrite 
+    (Affine (Scale) (Vec3 neg-one neg-one one) a) 
+    (Affine (Rotate) (Vec3 zero zero (Num 180.0)) a))
+
+;; scale_trans
+(rewrite
+    (Affine (Scale) (Vec3 a b c) (Affine (Trans) (Vec3 x y z) m)) 
+    (Affine (Trans) (Vec3 (Mul a x) (Mul b y) (Mul c z))
+        (Affine (Scale) (Vec3 a b c) m)))
+
+;; trans_scale
+(rewrite 
+    (Affine (Trans) (Vec3 x y z) (Affine (Scale) (Vec3 a b c) m)) 
+    (Affine (Scale) (Vec3 a b c) (Affine (Trans) (Vec3 (Div x a) (Div y b) (Div z c)) m)))
+
+;; PRIMITIVES
+
+;; cone_scale
+(rewrite
+    (Cylinder (Vec3 h r1 r2) params center) 
+    (Affine (Scale) (Vec3 one one h)
+        (Cylinder (Vec3 one r1 r2) params center)))
+
+;; scale_cone
+(rewrite
+    (Affine (Scale) (Vec3 one one h)
+        (Cylinder (Vec3 one r1 r2) params center)) 
+    (Cylinder (Vec3 h r1 r2) params center)
+    :when ((is-pos h))
+)
+
+;; cylinder_scale
+(rewrite
+    (Cylinder (Vec3 h r r) params center) 
+    (Affine (Scale) (Vec3 r r h)
+    (Cylinder (Vec3 one one one) params center)))
+;; scale_cylinder
+(rewrite
+    (Affine (Scale) (Vec3 r r h)
+    (Cylinder (Vec3 one one one) params center)) 
+    (Cylinder (Vec3 h r r) params center)
+    :when ((is-pos h))
+)
+
+;; cube_scale
+(rewrite
+    (Cube (Vec3 x y z) center) 
+    (Affine (Scale) (Vec3 x y z)
+    (Cube (Vec3 one one one) center)))
+;; scale_cube
+(rewrite
+    (Affine (Scale) (Vec3 x y z)
+    (Cube (Vec3 one one one) center)) 
+    (Cube (Vec3 x y z) center)
+    :when ((is-pos x) (is-pos y) (is-pos z))
+)
+
+;; sphere_scale
+(rewrite
+    (Sphere r params) 
+    (Affine (Scale) (Vec3 r r r)
+    (Sphere one params)))
+;; scale_sphere
+(rewrite
+    (Affine (Scale) (Vec3 r r r)
+    (Sphere one params)) 
+        (Sphere r params)
+    :when ((is-pos r))
+)
+
+;; AFFINE RULES
+
+;; id
+(rewrite (Affine (Trans) (Vec3 zero zero zero) a) a)
+
+;; combine_scale
+(rewrite 
+    (Affine (Scale) (Vec3 a b c) (Affine (Scale) (Vec3 d e f) cad)) 
+    (Affine (Scale) (Vec3 (Mul a d) (Mul b e) (Mul c f)) cad))
+;; combine_trans
+(rewrite 
+    (Affine (Trans) (Vec3 a b c) (Affine (Trans) (Vec3 d e f) cad)) 
+    (Affine (Trans) (Vec3 (Add a d) (Add b e) (Add c f)) cad))
+
+;; id intro rules
+(relation should-intro (Cad))
+(rule ((= e (Affine op param cad)))
+      ((should-intro e)))
+(rule ((= e (Binop op cad1 cad2)))
+      ((should-intro e)))
+(rule ((= e (Fold op cads)))
+      ((should-intro e)))
+
+(rule (
+    (should-intro e)
+) (
+    (union e (Affine (Scale) (Vec3 one one one) e))
+    (union e (Affine (Trans) (Vec3 zero zero zero) e))
+    (union e (Affine (Rotate) (Vec3 zero zero zero) e))
+))
+
+;; id elim rules
+(rewrite (Affine (Scale) (Vec3 one one one) e) e)
+(rewrite (Affine (Trans) (Vec3 zero zero zero) e) e)
+(rewrite (Affine (Rotate) (Vec3 zero zero zero) e) e)

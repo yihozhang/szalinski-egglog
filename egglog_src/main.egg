@@ -1,0 +1,7 @@
+(include "egglog_src/datatype.egg")
+(include "egglog_src/analysis.egg")
+(include "egglog_src/rules/prerules.egg")
+(include "egglog_src/rules/math.egg")
+(include "egglog_src/rules/base.egg")
+(include "egglog_src/rules/inv-trans.egg")
+(include "egglog_src/rules/cad.egg")

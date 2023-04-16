@@ -1,0 +1,49 @@
+
+;; fold_nil
+(rewrite (Binop bop a b) (Fold bop (List (vec-of a b))))
+
+;; cad rules
+
+;; fold_repeat
+(rewrite (Fold bop (Map2 aff (Repeat n param) cads)) 
+         (Affine aff param (Fold bop cads)))
+
+;; fold_op
+(rewrite (Fold bop (Affine aff param cad)) (Affine aff param (Fold bop cad)))
+
+;; union_trans
+(rewrite (Binop (Union) (Affine (Trans) (Vec3 x y z) a) (Affine (Trans) (Vec3 x y z) b)) 
+         (Affine (Trans) (Vec3 x y z) (Binop (Union) a b)))
+
+;; inter_empty
+;; (rewrite (Binop (Inter) a Empty) Empty)
+(rewrite (Binop (Inter) a (Empty)) (Empty))
+
+;; idempotent
+;; union_same
+(rewrite (Binop (Union) a a) a)
+;; inter_same
+(rewrite (Binop (Inter) a a) a)
+
+;; inter_union
+(rewrite (Binop (Inter) a (Binop (Union) a b)) a)
+
+;; PARTITIONING
+;; concat
+(rewrite (Unpart part lists) (Concat lists))
+
+;; repeat_mapi
+(rewrite (Repeat n x) (MapI (i n) x))
+
+;; MAPI
+;; map_repeat
+(rewrite (Map2 op (MapI n formula) (MapI n cad)) 
+         (MapI n (Affine op formula cad)))
+
+;; map_mapi2
+(rewrite (Map2 op (MapI (ij n1 n2) formula) (Repeat n cad))
+         (MapI (ij n1 n2) (Affine op formula cad))
+        :when ((= n (* n1 n2)))) ;; TODO: is (* n1 n2) here ok?
+;; mapi2_mapi2
+(rewrite (Map2 op (MapI idx param) (MapI idx cad)) 
+         (MapI idx (Affine op param cad)))

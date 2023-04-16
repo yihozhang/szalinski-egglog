@@ -1,0 +1,67 @@
+(datatype B
+    (True)
+    (False))
+
+(datatype AffineOp
+    (Trans)
+    (TransPolar)
+    (Scale)
+    (Rotate))
+
+(datatype Idx
+    (i i64)
+    (ij i64 i64)
+    (ijk i64 i64 i64))
+
+(datatype SetOp
+    (Union)
+    (Diff)
+    (Inter))
+
+(datatype Cad)
+(sort VecCad (Vec Cad))
+
+
+(function Cube (Cad Cad) Cad)
+(function Sphere (Cad Cad) Cad)
+(function Cylinder (Cad Cad Cad) Cad)
+(function Empty () Cad)
+(function Hull (Cad) Cad)
+(function Nil () Cad)
+(function Num (f64) Cad)
+(function Bool (B) Cad)
+
+(function MapI (Idx Cad) Cad)
+(function ListVar (String) Cad)
+(function Repeat (i64 Cad) Cad)
+
+
+(function Map2 (AffineOp Cad Cad) Cad)
+(function Fold (SetOp Cad) Cad)
+(function Affine (AffineOp Cad Cad) Cad)
+(function Binop (SetOp Cad Cad) Cad)
+
+(function Vec3 (Cad Cad Cad) Cad)
+
+(function Cons (Cad Cad) Cad)
+(function Concat (Cad) Cad)
+(function List (VecCad) Cad)
+
+(function Sort (Cad Cad) Cad)
+(function Unsort (Cad Cad) Cad)
+(function Part (Cad Cad) Cad)
+(function Unpart (Cad Cad) Cad)
+(function Unpolar (i64 Cad Cad) Cad)
+
+; (function Permutation (Permutation) Cad)
+; (function Partitioning (Partitioning) Cad)
+
+(function Add (Cad Cad) Cad)
+(function Sub (Cad Cad) Cad)
+(function Mul (Cad Cad) Cad)
+(function Div (Cad Cad) Cad)
+(function BlackBox (String VecCad) Cad)
+
+(let zero (Num 0.0))
+(let one (Num 1.0))
+(let neg-one (Num -1.0))

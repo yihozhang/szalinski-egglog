@@ -1,0 +1,48 @@
+;; map_unpart_r2
+(rewrite
+    (Map2 op params (Unpart part cads)) 
+    (Unpart part (Part part
+        (Map2 op params (Unpart part cads)))))
+
+;; map_unpart_l2
+(rewrite
+      (Map2 op (Unpart part params) cads) 
+    (Unpart part (Part part
+        (Map2 op (Unpart part params) cads))))
+
+;; part_unpart
+(rewrite (Part part (Unpart part list)) list)
+
+;; unpart_part
+(rewrite (Unpart part (Part part list)) list)
+
+;; sort_unsort
+(rewrite (Sort perm (Unsort perm list)) list)
+;; unsort_sort
+(rewrite (Unsort perm (Sort perm list)) list)
+
+;; map_unsort_l
+(rewrite
+    (Map2 op (Unsort perm params) cads) 
+    (Unsort perm (Sort perm
+        (Map2 op (Unsort perm params) cads))))
+
+;; map_unsort_r
+(rewrite
+    (Map2 op params (Unsort perm cads)) 
+    (Unsort perm (Sort perm
+        (Map2 op params (Unsort perm cads)))))
+
+;; unsort_repeat
+(rewrite (Unsort perm (Repeat n elem)) (Repeat n elem))
+
+;; fold_union_unsort
+(rewrite (Fold (Union) (Unsort perm x)) (Fold (Union) x))
+;; fold_inter_unsort
+(rewrite (Fold (Inter) (Unsort perm x)) (Fold (Inter) x))
+
+;; UNPOLAR
+;; unpolar_trans
+(rewrite 
+    (Map2 (Trans) (Unpolar n center params) cads) 
+    (Map2 (Trans) (Repeat n center) (Map2 (TransPolar) params cads)))

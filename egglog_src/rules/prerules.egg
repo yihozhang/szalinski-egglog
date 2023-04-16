@@ -1,0 +1,11 @@
+(rewrite (Binop (Union) a b) (Binop (Union) b a))
+(rewrite (Binop (Inter) a b) (Binop (Inter) b a))
+(rewrite (Binop bop a b) (Fold bop (List (vec-of a b))))
+(rewrite (Binop bop a (Fold bop list)) (Fold bop (Cons a list)))
+
+;; TODO: flatten rule
+;; (rewrite (Fold (Union) list)
+;;          (flatten list op))
+
+;; TODO: user-defined applier / "primitive" should also have a view of the world
+;; TODO: question: what should primitive return? Or should primitive should update the universe.

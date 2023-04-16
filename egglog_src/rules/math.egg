@@ -1,0 +1,23 @@
+;; add_comm
+(rewrite (Add a b) (Add b a))
+;; add_zero
+(rewrite (Add zero a) a)
+
+;; sub_zero
+(rewrite (Sub a zero) a)
+
+;; mul_zero
+(rewrite (Mul zero a) zero)
+;; mul_one
+(rewrite (Mul one a) a)
+;; mul_comm
+(rewrite (Mul a b) (Mul b a))
+
+;; div_one
+(rewrite (Div a one) a)
+;; mul_div
+(rewrite (Mul a (Div b a)) b
+    :when ((is-not-zero a)))
+;; div_mul
+(rewrite (Div (Mul a b) a) b
+    :when ((is-not-zero a)))
